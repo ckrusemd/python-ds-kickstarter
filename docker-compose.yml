@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+    api:
+        container_name: api
+        restart: always
+        build: 
+            context: ./
+            dockerfile: Docker/api/Dockerfile
+        ports:
+            - "80:80"
+    dash:
+        container_name: dash
+        restart: always
+        build: 
+            context: ./
+            dockerfile: Docker/dash/Dockerfile
+        ports:
+            - "8050:8050"
+        command: gunicorn -w 1 -b :8050 dash.app:server
+    mongodb:
+        container_name: mongodb
+        restart: always
+        build: 
+            context: ./
+            dockerfile: Docker/mongodb/Dockerfile
+        ports:
+            - "27017:27017"
+    pytest:
+        container_name: pytest
+        build: 
+            context: ./
+            dockerfile: Docker/pytest/Dockerfile
+        ports:
+            - "8080:8080"
+        command: pytest tests --html=/var/html/www/report.html --self-contained-html
