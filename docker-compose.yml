@@ -10,13 +10,12 @@ services:
             - "80:80"
     dash:
         container_name: dash
-        restart: always
         build: 
             context: ./
             dockerfile: Docker/dash/Dockerfile
         ports:
             - "8050:8050"
-        command: gunicorn -w 1 -b :8050 dash.app:server
+        command: gunicorn -w 1 -b :8050 src.dash.app:server
     mongodb:
         container_name: mongodb
         restart: always
@@ -31,5 +30,5 @@ services:
             context: ./
             dockerfile: Docker/pytest/Dockerfile
         ports:
-            - "8080:8080"
-        command: pytest tests --html=/var/html/www/report.html --self-contained-html
+            - "8080:80"
+        command: nginx -g "daemon off;"
