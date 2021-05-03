@@ -1,20 +1,18 @@
-FROM ubuntu:latest
+FROM ubuntu
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install net-tools nginx
-RUN useradd -ms /bin/bash aurora
-RUN rm -f /etc/nginx/fastcgi.conf /etc/nginx/fastcgi_params && \
-    rm -f /etc/nginx/snippets/fastcgi-php.conf /etc/nginx/snippets/snakeoil.conf
+RUN apt-get update
+RUN apt-get -y install nginx
 
-EXPOSE 80
-EXPOSE 443
-
-COPY nginx/ssl /etc/nginx/ssl
-COPY nginx/snippets /etc/nginx/snippets
-COPY nginx/sites-available /etc/nginx/sites-available
+RUN apt-get update
+RUN apt-get install --no-install-recommends -y python3.8 python3-pip python3.8-dev
 
 COPY . /.
+
+RUN update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["/usr/sbin/nginx", "-g", "daemon off;"]
+RUN rm /var/www/html/index.nginx-debian.html
+RUN pytest -q tests --html=/var/www/html/index.nginx-debian.html --self-contained-html
+
+EXPOSE 80
