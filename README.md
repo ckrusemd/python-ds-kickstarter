@@ -8,16 +8,14 @@ Builds on top of the excellent Cookiecutter DS template with services for FastAP
 I base other projects on this template and invite you to do the same - please raise issues and suggestions.
 
 Docker services:
-- FastAPI
-- Plotly Dash
-- MongoDB 
-- Pytest-html (with nginx)
+* FastAPI (:80)
+* Plotly Dash Development, enabling hot-reload, (:8051)
+* Plotly Dash Production, Gunicorn (:8050)
+* MongoDB  (:27017)
+* Pytest-html w/ nginx (:8080)
 
 How to run:
-* docker-compose up -d
 
-Default services:
-* FastAPI: 127.0.0.1:8080/docs
-* Dash: 127.0.0.1:8050
-* MongoDB: 127.0.0.1:27017
-* Pytest-html: 127.0.0.1:80
+```
+docker-compose up -d
+```
