@@ -8,14 +8,33 @@ services:
             dockerfile: Docker/api/Dockerfile
         ports:
             - "80:80"
-    dash:
-        container_name: dash
+        depends_on:
+            - mongodb
+        links:
+            - mongodb
+        volumes:
+            - ./:/app
+        entrypoint: sh /app/Docker/api/entrypoint.sh
+    dashproduction:
+        container_name: dash_production
         build: 
             context: ./
-            dockerfile: Docker/dash/Dockerfile
+            dockerfile: Docker/dash_production/Dockerfile
         ports:
             - "8050:8050"
-        command: gunicorn -w 1 -b :8050 src.dash.app:server
+        volumes:
+            - ./:/app
+        entrypoint: sh /app/Docker/dash_production/entrypoint.sh
+    dashdevelopment:
+        container_name: dash_development
+        build: 
+            context: ./
+            dockerfile: Docker/dash_development/Dockerfile
+        ports:
+            - "8051:8050"
+        volumes:
+            - ./:/app
+        entrypoint: sh /app/Docker/dash_development/entrypoint.sh
     mongodb:
         container_name: mongodb
         restart: always
@@ -31,4 +50,6 @@ services:
             dockerfile: Docker/pytest/Dockerfile
         ports:
             - "8080:80"
-        command: nginx -g "daemon off;"
+        volumes:
+            - ./:/app
+        entrypoint: sh /app/Docker/pytest/entrypoint.sh
