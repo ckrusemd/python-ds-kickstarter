@@ -18,3 +18,4 @@ tox
 fastapi
 pymongo
 loguru
+dash_bootstrap_components
